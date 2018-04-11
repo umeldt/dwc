@@ -1,0 +1,35 @@
+DwC version 0.01
+================
+
+DwC - work with Darwin Core records.
+
+The DwC base package is extremly minimal, relying on plugins to validate,
+clean and transform data.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+  JSON
+  Module::Pluggable
+
+COPYRIGHT AND LICENCE
+
+Put the correct copyright and licence information here.
+
+Copyright (C) 2017 by umeldt
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.24.3 or,
+at your option, any later version of Perl 5 you may have available.
+
+
