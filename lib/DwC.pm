@@ -159,6 +159,16 @@ sub validate {
 
 sub clean {
   my ($me) = @_;
+
+  if(!$ENV{DWC_HANDSOFF}) {
+    my $bor = $$me{basisOfRecord} || "Occurrence";
+    $$me{basisOfRecord} = "PreservedSpecimen" if $bor eq "Preserved specimen";
+    $$me{basisOfRecord} = "FossilSpecimen" if $bor eq "Fossil specimen";
+    $$me{basisOfRecord} = "LivingSpecimen" if $bor eq "Living specimen";
+    $$me{basisOfRecord} = "HumanObservation" if $bor eq "Human observation";
+    $$me{basisOfRecord} = "MachineObservation" if $bor eq "Machine observation";
+  }
+
   for my $plugin ($me->plugins) {
     $plugin->clean($me) if $plugin->can("clean");
   }
