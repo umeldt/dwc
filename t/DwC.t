@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 BEGIN { use_ok('DwC') };
 
 my $dwc = DwC->new({
@@ -25,4 +25,7 @@ ok($$dwc{error}[1][0] eq "No occurrenceID");
 $$dwc{notdwc} = "Unknown term";
 $dwc->unknown();
 ok($$dwc{warning}[0][0] eq "Unknown term: notdwc");
+
+$$dwc{catalogNumber} = undef;
+ok(!eval { $dwc->validate(); });
 

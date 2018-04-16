@@ -36,11 +36,12 @@ our %Cores = (
 );
 
 our @Terms = (
-  "dcterms:type", "dcterms:modified", "dcterms:language",
-  "dcterms:license", "dcterms:rightsHolder", "dcterms:accessRights",
-  "dcterms:bibliographicCitation", "dcterms:references", "institutionID",
-  "collectionID", "datasetID", "institutionCode", "collectionCode",
-  "datasetName", "ownerInstitutionCode", "basisOfRecord",
+  "type", "modified", "language",
+  "license", "rightsHolder", "accessRights",
+  "bibliographicCitation", "references",
+  "institutionID", "collectionID", "datasetID",
+  "institutionCode", "collectionCode", "datasetName", "ownerInstitutionCode",
+  "basisOfRecord",
   "informationWithheld", "dataGeneralizations", "dynamicProperties",
   "occurrenceID", "catalogNumber", "recordNumber", "recordedBy",
   "individualCount", "organismQuantity", "organismQuantityType", "sex",
@@ -130,6 +131,9 @@ sub new {
 
 sub triplet {
   my $me = shift;
+  if(!$$me{institutionCode} || !$$me{collectionCode} || !$$me{catalogNumber}) {
+    die "Missing triplet ingredients";
+  }
   return "$$me{institutionCode}:$$me{collectionCode}:$$me{catalogNumber}";
 }
 
