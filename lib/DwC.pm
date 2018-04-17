@@ -35,9 +35,13 @@ our %Cores = (
   multimedia => "id"
 );
 
+our @DCTerms = (
+  "dcterms:type", "dcterms:modified", "dcterms:language",
+  "dcterms:license", "dcterms:rightsHolder", "dcterms:accessRights",
+  "type", "modified", "language", "license", "rightsHolder", "accessRights"
+);
+
 our @Terms = (
-  "type", "modified", "language",
-  "license", "rightsHolder", "accessRights",
   "bibliographicCitation", "references",
   "institutionID", "collectionID", "datasetID",
   "institutionCode", "collectionCode", "datasetName", "ownerInstitutionCode",
@@ -113,6 +117,13 @@ sub disable_plugin {
   @PLUGINS = grep { my $id = s/^DwC::Plugin:://r; $id ne $remove } @PLUGINS;
 }
 
+sub expand {
+  my ($dwc, @terms) = @_;
+  foreach my $term (@terms) {
+    $$dwc{$term} = "" unless $$dwc{$term};
+  }
+}
+
 sub new {
   my $me = shift;
   my $record = shift;
@@ -181,21 +192,32 @@ sub judge {
   }
 }
 
+sub augment {
+  my ($me) = @_;
+  for my $plugin ($me->plugins) {
+    $plugin->augment($me) if $plugin->can("augment");
+  }
+}
+
 sub unknown {
   my ($me) = @_;
+  my @terms = (@Terms, @Auxiliary, @DCTerms);
   foreach my $key (keys %$me) {
     if($key =~ /^warning|error|info$/) { next };
-    if(!grep(/^$key$/, @Terms) && !grep(/^$key$/, @Auxiliary)) {
-      $me->log("warning", "Unknown term: $key", "core");
+
+    if(!grep(/^$key$/, @terms)) {
+      $me->log("error", "Unknown term: $key", "core");
     }
   }
 }
 
 sub printcsv {
   my ($me, $fh, $fields) = @_;
+
   $$me{_info} = encode_json($$me{info});
   $$me{_warnings} = encode_json($$me{warning});
   $$me{_errors} = encode_json($$me{error});
+
   my $row = join("\t", @{$me}{@$fields});
   use warnings FATAL => 'all';
   $row =~ s/\"/'/g;
@@ -225,6 +247,8 @@ DwC - Darwin Core
   $record->validate();
 
   $record->clean();
+
+  $record->augment();
 
 =head1 DESCRIPTION
 
