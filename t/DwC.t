@@ -24,7 +24,7 @@ ok($$dwc{error}[1][0] eq "No occurrenceID");
 
 $$dwc{notdwc} = "Unknown term";
 $dwc->unknown();
-ok($$dwc{warning}[0][0] eq "Unknown term: notdwc");
+ok($$dwc{error}[2][0] eq "Unknown term: notdwc");
 
 $$dwc{catalogNumber} = undef;
 ok(!eval { $dwc->validate(); });
