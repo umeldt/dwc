@@ -140,6 +140,13 @@ sub new {
   return bless $record;
 }
 
+sub reset {
+  my $me = shift;
+  $$me{info} = [];
+  $$me{error} = [];
+  $$me{warning} = [];
+}
+
 sub triplet {
   my $me = shift;
   if(!$$me{institutionCode} || !$$me{collectionCode} || !$$me{catalogNumber}) {
