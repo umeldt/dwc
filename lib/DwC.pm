@@ -137,6 +137,10 @@ sub new {
   $$record{error} = [];
   $$record{warning} = [];
 
+  if($ENV{DWC_BASIS}) {
+    $$record{basisOfRecord} = $ENV{DWC_BASIS};
+  }
+
   return bless $record;
 }
 
@@ -225,8 +229,8 @@ sub printcsv {
   $$me{_warnings} = encode_json($$me{warning});
   $$me{_errors} = encode_json($$me{error});
 
-  my $row = join("\t", @{$me}{@$fields});
   use warnings FATAL => 'all';
+  my $row = join("\t", @{$me}{@$fields});
   $row =~ s/\"/'/g;
   say $fh $row;
 }
