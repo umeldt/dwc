@@ -137,6 +137,8 @@ sub new {
   $$record{error} = [];
   $$record{warning} = [];
 
+  $$record{"dcterms:modified"} = "";
+
   if($ENV{DWC_BASIS}) {
     $$record{basisOfRecord} = $ENV{DWC_BASIS};
   }
@@ -228,6 +230,8 @@ sub printcsv {
   $$me{_info} = encode_json($$me{info});
   $$me{_warnings} = encode_json($$me{warning});
   $$me{_errors} = encode_json($$me{error});
+  $$me{"dcterms:modified"} = "";
+  $$me{"dcterms:license"} = "";
 
   use warnings FATAL => 'all';
   my $row = join("\t", @{$me}{@$fields});
